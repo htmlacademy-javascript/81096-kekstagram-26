@@ -20,7 +20,7 @@ function checkMaxLeghtString (string, maxLengthSumbols = 140) {
 checkMaxLeghtString('');
 
 
-const Names = [
+const NAMES = [
   'Pedro',
   'Fatima',
   'Nuno',
@@ -29,7 +29,7 @@ const Names = [
   'Fedor',
 ];
 
-const Messages = [
+const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -37,31 +37,38 @@ const Messages = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
 ];
 
-const createObject = (Ids) => ({
-  id: Ids,
-  imageUrl: 'photos/' + Ids + '.jpg',
-  photoDescription: 'Мне понравилась фотография, потому что она  (четко передает чувства, эмоции, атмосферу.',
-  numberLike: (randomInteger(15, 200))
-});
+const DESCRIPTIONS = [
+  'Мальчик тянет за собой игрушку - машинку на веревке.',
+  'Мне понравилась фотография, потому что она  (четко передает чувства, эмоции, атмосферу.',
+  'За малышом открывается вид на большой и красивый город.',
+  'На фотографии мы видим … (девочек / двух юношей / много выпускников)',
+  'Я считаю, что снимок получился удачным и атмосферным.',
+];
 
-const createObjects = (count) => {
-  const objects = [];
-  for (let i = 1; i <= count; i++) {
-    objects.push(createObject(i));
-  }
-  return objects;
-}
-
-const maxObjectCount = 25;
-const objects = createObjects(maxObjectCount);
+let commentId = 1;
 
 // Cписок комментариев, оставленных другими пользователями к этой фотографии
-const createComments = () => {
-  return {
-    id: randomInteger(0, 10000),
-    avatar: 'img/avatar-' + randomInteger(0, 6) + '.svg',
-    massage: Messages[randomInteger(0, Messages.length - 1)],
-    name: Names[randomInteger(0, Names.length - 1)],
-   };
+const createComment = () => ({
+  id: commentId++,
+  avatar: `img/avatar-${randomInteger(1, 6)}.svg`,
+  massage: MESSAGES[randomInteger(0, MESSAGES.length - 1)],
+  name: NAMES[randomInteger(0, NAMES.length - 1)],
+});
+
+const createPost = (Ids) => ({
+  id: Ids,
+  url: `photos/${Ids}.jpg`,
+  description: DESCRIPTIONS[randomInteger(0, DESCRIPTIONS.length - 1)],
+  likes: (randomInteger(15, 200)),
+  comments: Array.from({length: randomInteger(1, 5)}, createComment),
+});
+
+const createSomePosts = (count) => {
+  const objects = [];
+  for (let i = 1; i <= count; i++) {
+    objects.push(createPost(i));
+  }
+  return objects;
 };
-const similarComments = Array.from({length: 6}, createComments);
+const maxObjectCount = 25;
+const posts = createSomePosts(maxObjectCount);
